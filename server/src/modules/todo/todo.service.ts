@@ -4,49 +4,49 @@ import { Todo } from '../../types';
 import { notFound } from '../../utils/ApiError';
 
 export const todoService = {
-  list(): Todo[] {
-    return todoRepository.list();
+  async list(): Promise<Todo[]> {
+    return await todoRepository.list();
   },
 
-  get(id: string): Todo {
-    const found = todoRepository.getById(id);
+  async get(id: string): Promise<Todo> {
+    const found = await todoRepository.getById(id);
     if (!found) throw notFound('Todo not found');
     return found;
   },
 
-  create(input: CreateTodoInput): Todo {
-    return todoRepository.create({
+  async create(input: CreateTodoInput): Promise<Todo> {
+    return await todoRepository.create({
       title: input.title,
       done: input.done ?? false,
       description: input.description,
     });
   },
 
-  update(id: string, input: UpdateTodoInput): Todo {
-    const updated = todoRepository.update(id, input);
+  async update(id: string, input: UpdateTodoInput): Promise<Todo> {
+    const updated = await todoRepository.update(id, input);
     if (!updated) throw notFound('Todo not found');
     return updated;
   },
 
-  updateTitleDescription(id: string, input: { title?: string; description?: string }): Todo {
+  async updateTitleDescription(id: string, input: { title?: string; description?: string }): Promise<Todo> {
     const payload: { title?: string; description?: string } = {};
     if (typeof input.title !== 'undefined') payload.title = input.title;
     if (typeof input.description !== 'undefined') payload.description = input.description;
-    const updated = todoRepository.update(id, payload);
+    const updated = await todoRepository.update(id, payload);
     if (!updated) throw notFound('Todo not found');
     return updated;
   },
 
-  toggleDone(id: string): Todo {
-    const current = todoRepository.getById(id);
+  async toggleDone(id: string): Promise<Todo> {
+    const current = await todoRepository.getById(id);
     if (!current) throw notFound('Todo not found');
-    const updated = todoRepository.update(id, { done: !current.done });
+    const updated = await todoRepository.update(id, { done: !current.done });
     if (!updated) throw notFound('Todo not found');
     return updated;
   },
 
-  remove(id: string): void {
-    const ok = todoRepository.remove(id);
+  async remove(id: string): Promise<void> {
+    const ok = await todoRepository.remove(id);
     if (!ok) throw notFound('Todo not found');
   },
 };

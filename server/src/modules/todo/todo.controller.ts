@@ -1,58 +1,52 @@
 import { Request, Response, NextFunction } from 'express';
 import { todoService } from './todo.service';
 
-export const listTodos = (_req: Request, res: Response) => {
-  const todos = todoService.list();
-  res.json(todos);
-};
-
-export const getTodo = (req: Request, res: Response) => {
-  const todo = todoService.get(req.params.id);
-  res.json(todo);
-};
-
-export const createTodo = (req: Request, res: Response, next: NextFunction) => {
+export const listTodos = async (_req: Request, res: Response, next: NextFunction) => {
   try {
-    const todo = todoService.create(req.body);
+    const todos = await todoService.list();
+    res.json(todos);
+  } catch (e) { next(e); }
+};
+
+export const getTodo = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const todo = await todoService.get(req.params.id);
+    res.json(todo);
+  } catch (e) { next(e); }
+};
+
+export const createTodo = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const todo = await todoService.create(req.body);
     res.status(201).json(todo);
-  } catch (e) {
-    next(e);
-  }
+  } catch (e) { next(e); }
 };
 
-export const updateTodo = (req: Request, res: Response, next: NextFunction) => {
+export const updateTodo = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const todo = todoService.update(req.params.id, req.body);
+    const todo = await todoService.update(req.params.id, req.body);
     res.json(todo);
-  } catch (e) {
-    next(e);
-  }
+  } catch (e) { next(e); }
 };
 
-export const deleteTodo = (req: Request, res: Response, next: NextFunction) => {
+export const deleteTodo = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    todoService.remove(req.params.id);
+    await todoService.remove(req.params.id);
     res.status(204).send();
-  } catch (e) {
-    next(e);
-  }
+  } catch (e) { next(e); }
 };
 
-export const putUpdateTodo = (req: Request, res: Response, next: NextFunction) => {
+export const putUpdateTodo = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const todo = todoService.updateTitleDescription(req.params.id, req.body);
+    const todo = await todoService.updateTitleDescription(req.params.id, req.body);
     res.json(todo);
-  } catch (e) {
-    next(e);
-  }
+  } catch (e) { next(e); }
 };
 
-export const toggleDone = (req: Request, res: Response, next: NextFunction) => {
+export const toggleDone = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const todo = todoService.toggleDone(req.params.id);
+    const todo = await todoService.toggleDone(req.params.id);
     res.json(todo);
-  } catch (e) {
-    next(e);
-  }
+  } catch (e) { next(e); }
 };
 

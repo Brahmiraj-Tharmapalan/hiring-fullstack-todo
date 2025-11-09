@@ -1,0 +1,20 @@
+// Prisma schema for Neon Postgres
+// Run: npx prisma generate && npx prisma migrate dev --name init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Todo {
+  id          Int      @id @default(autoincrement())
+  title       String   @unique
+  description String?
+  done        Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
