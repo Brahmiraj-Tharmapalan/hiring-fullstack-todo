@@ -1,13 +1,20 @@
 import { createApp } from './app';
-import dotenv from 'dotenv';
+import { connectDB } from './config/db';
+import { env } from './config/env';
 
-dotenv.config();
+async function bootstrap() {
+  try {
+    await connectDB();
+    const app = createApp();
+    app.listen(env.port, () => {
+      console.log(`🚀 Server running on http://localhost:${env.port}`);
+      console.log(`📝 Environment: ${env.nodeEnv}`);
+      console.log(`✅ Health check: http://localhost:${env.port}/health`);
+    });
+  } catch (err) {
+    console.error('Failed to start server:', err);
+    process.exit(1);
+  }
+}
 
-const app = createApp();
-const PORT = process.env.PORT || 5000;
-
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-  console.log(`📝 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`✅ Health check: http://localhost:${PORT}/health`);
-});
+bootstrap();

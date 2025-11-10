@@ -6,4 +6,3 @@ export type Todo = {
   createdAt: string;
   updatedAt: string;
 };
-
